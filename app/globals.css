@@ -1,0 +1,170 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ------------------------------------------------------------------ */
+/* Design tokens (space-separated RGB so Tailwind alpha modifiers work) */
+/* ------------------------------------------------------------------ */
+:root {
+  color-scheme: light;
+  --bg: 242 245 252;        /* Frost */
+  --surface: 255 255 255;
+  --raised: 232 237 250;
+  --line: 214 221 242;
+  --fg: 18 25 54;
+  --muted: 85 96 138;
+  --brand: 53 82 232;       /* Cobalt (light) */
+  --brand-fg: 255 255 255;
+  --saffron: 214 130 0;
+  --shadow: 40 55 120;
+
+  /* Reserved ad heights, shared so layout and AdSlot never disagree (zero CLS) */
+  --ad-header-h: 100px;
+  --ad-sticky-h: 60px;
+}
+
+.dark {
+  color-scheme: dark;
+  --bg: 16 22 43;           /* Ink */
+  --surface: 24 32 64;
+  --raised: 27 36 71;
+  --line: 42 53 99;
+  --fg: 233 236 250;
+  --muted: 152 162 204;
+  --brand: 91 124 255;      /* Cobalt (dark) */
+  --brand-fg: 10 14 32;
+  --saffron: 255 181 71;
+  --shadow: 3 6 20;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --ad-header-h: 90px;
+    --ad-sticky-h: 90px;
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-bg font-sans text-fg antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  h1, h2, h3, h4 {
+    @apply font-display text-fg;
+  }
+  ::selection {
+    background: rgb(var(--brand) / 0.3);
+  }
+  :focus-visible {
+    outline: 2px solid rgb(var(--brand));
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+}
+
+@layer components {
+  .panel {
+    @apply rounded-tile border border-line bg-surface shadow-lift;
+  }
+  .glass {
+    @apply border border-line/70 bg-surface/70 backdrop-blur-xl;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-pill px-5 py-2.5 text-sm font-semibold transition duration-300 ease-snap active:scale-[0.97];
+  }
+  .btn-primary {
+    @apply btn bg-brand text-brand-fg hover:shadow-glow;
+  }
+  .btn-ghost {
+    @apply btn border border-line bg-surface/60 text-fg hover:border-brand/60 hover:bg-raised;
+  }
+
+  .chip {
+    @apply inline-flex shrink-0 items-center gap-2 rounded-pill border border-line bg-surface px-4 py-2 text-sm font-medium text-muted transition duration-300 ease-snap hover:border-brand/60 hover:text-fg;
+  }
+  .chip[aria-pressed="true"] {
+    @apply border-brand bg-brand text-brand-fg;
+  }
+
+  /* Shared form controls used by every tool */
+  .field {
+    @apply w-full rounded-xl border border-line bg-surface px-4 py-3 text-base text-fg transition duration-200 placeholder:text-muted/70 focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/15;
+  }
+  .label {
+    @apply mb-1.5 block text-sm font-medium text-muted;
+  }
+
+  /* Custom range slider: one look for every calculator.
+     Set style={{ "--fill": "42%" }} from React to paint the filled track. */
+  input[type="range"].slider {
+    @apply h-2 w-full cursor-pointer appearance-none rounded-pill bg-raised;
+    background-image: linear-gradient(rgb(var(--brand)), rgb(var(--brand)));
+    background-size: var(--fill, 50%) 100%;
+    background-repeat: no-repeat;
+  }
+  input[type="range"].slider::-webkit-slider-thumb {
+    @apply h-5 w-5 cursor-grab appearance-none rounded-full border-2 border-bg bg-brand shadow-lift transition-transform duration-150 active:scale-125 active:cursor-grabbing;
+  }
+  input[type="range"].slider::-moz-range-thumb {
+    @apply h-5 w-5 cursor-grab rounded-full border-2 border-bg bg-brand shadow-lift;
+  }
+
+  /* Ad containers: always reserve space before the ad loads */
+  .ad-slot {
+    @apply relative mx-auto flex w-full items-center justify-center overflow-hidden rounded-xl;
+    contain: layout paint;
+  }
+  .ad-slot[data-placeholder="true"] {
+    @apply border border-dashed border-line bg-raised/50 text-xs text-muted;
+  }
+}
+
+@layer utilities {
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, rgb(var(--line) / 0.55) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(var(--line) / 0.55) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 30%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 30%, transparent 100%);
+  }
+  .text-shimmer {
+    background: linear-gradient(90deg, rgb(var(--fg)) 0%, rgb(var(--brand)) 45%, rgb(var(--fg)) 90%);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+  .mask-fade-x {
+    mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

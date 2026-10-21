@@ -2,75 +2,51 @@
 
 import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "framer-motion";
 
-/** Decorative 3D stack: three live-looking tool previews that drift with the pointer. */
+const CARDS = [
+  ["EMI Calculator", "₹41,236 / month"],
+  ["JSON Formatter", "Valid in 3 ms"],
+  ["Percentage", "+18% gives 2,832"],
+  ["Unit Converter", "5 km = 3.11 mi"],
+  ["Word Counter", "1,284 words"],
+  ["GST Calculator", "₹1,180 incl. 18%"],
+];
+
+/** A slowly rotating 3D ring of tool previews. Pointer position tilts the whole scene. */
 export function HeroStack() {
   const reduce = useReducedMotion();
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
-  const sx = useSpring(mx, { stiffness: 90, damping: 18 });
-  const sy = useSpring(my, { stiffness: 90, damping: 18 });
-
-  const rotateY = useTransform(sx, [-0.5, 0.5], [-14, 14]);
-  const rotateX = useTransform(sy, [-0.5, 0.5], [10, -10]);
-
-  const onMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (reduce) return;
-    const r = e.currentTarget.getBoundingClientRect();
-    mx.set((e.clientX - r.left) / r.width - 0.5);
-    my.set((e.clientY - r.top) / r.height - 0.5);
-  };
+  const rotateY = useSpring(useTransform(mx, [-0.5, 0.5], [-16, 16]), { stiffness: 80, damping: 18 });
+  const rotateX = useSpring(useTransform(my, [-0.5, 0.5], [18, -6]), { stiffness: 80, damping: 18 });
 
   return (
     <div
       aria-hidden
-      onPointerMove={onMove}
+      onPointerMove={(e) => {
+        if (reduce) return;
+        const r = e.currentTarget.getBoundingClientRect();
+        mx.set((e.clientX - r.left) / r.width - 0.5);
+        my.set((e.clientY - r.top) / r.height - 0.5);
+      }}
       onPointerLeave={() => {
         mx.set(0);
         my.set(0);
       }}
-      className="perspective-1000 relative hidden h-[420px] lg:block"
+      className="perspective-1000 relative hidden h-[460px] lg:block"
     >
       <motion.div style={reduce ? undefined : { rotateX, rotateY }} className="preserve-3d absolute inset-0">
-        {/* EMI */}
-        <div className="panel absolute left-2 top-6 w-72 animate-float p-5" style={{ transform: "translateZ(20px)" }}>
-          <p className="text-xs font-medium text-muted">EMI Calculator</p>
-          <p className="mt-2 font-display text-4xl font-bold tracking-tight">₹41,236</p>
-          <p className="text-sm text-muted">per month for 20 years</p>
-          <div className="mt-5 h-2 rounded-pill bg-raised">
-            <div className="h-full w-[62%] rounded-pill bg-brand" />
-          </div>
-          <div className="mt-2 flex justify-between text-xs text-muted">
-            <span>Principal</span>
-            <span>Interest</span>
-          </div>
-        </div>
-
-        {/* JSON */}
-        <div
-          className="panel absolute right-0 top-28 w-64 animate-float-slow p-5"
-          style={{ transform: "translateZ(70px)", animationDelay: "-3s" }}
-        >
-          <p className="text-xs font-medium text-muted">JSON Formatter</p>
-          <pre className="mt-3 text-[13px] leading-6 text-fg">
-{`{
-  "tool": "oneclick",
-  "valid": `}<span className="text-saffron">true</span>{`,
-  "ms": `}<span className="text-brand">3</span>{`
-}`}
-          </pre>
-        </div>
-
-        {/* Percentage */}
-        <div
-          className="panel absolute bottom-2 left-16 w-60 animate-float p-5"
-          style={{ transform: "translateZ(120px)", animationDelay: "-5s" }}
-        >
-          <p className="text-xs font-medium text-muted">Percentage Calculator</p>
-          <div className="mt-3 flex items-baseline gap-2">
-            <span className="font-display text-3xl font-bold text-saffron">+18%</span>
-            <span className="text-sm text-muted">from 2,400</span>
-          </div>
-          <p className="mt-1 text-sm text-muted">equals 2,832</p>
+        <div className="absolute left-1/2 top-1/2 h-40 w-40 -translate-x-1/2 -translate-y-1/2 animate-float rounded-full bg-[radial-gradient(circle_at_30%_28%,#fff,rgb(var(--saffron))_45%,rgb(var(--brand))_100%)] opacity-80 blur-[2px] shadow-glow" />
+        <div className="preserve-3d absolute inset-0 animate-spin3d" style={reduce ? { animation: "none" } : undefined}>
+          {CARDS.map(([title, value], i) => (
+            <div
+              key={title}
+              className="panel absolute left-1/2 top-1/2 w-[200px] p-4 [backface-visibility:hidden]"
+              style={{ margin: "-48px 0 0 -100px", transform: `rotateY(${i * 60}deg) translateZ(250px)` }}
+            >
+              <p className="text-[11px] font-medium uppercase tracking-wider text-saffron">{title}</p>
+              <p className="mt-1.5 font-display text-xl font-semibold">{value}</p>
+            </div>
+          ))}
         </div>
       </motion.div>
     </div>

@@ -48,6 +48,7 @@ const config: Config = {
         snap: "cubic-bezier(0.22, 1, 0.36, 1)",
       },
       keyframes: {
+        spin3d: { from: { transform: "rotateY(0deg)" }, to: { transform: "rotateY(360deg)" } },
         float: {
           "0%, 100%": { transform: "translate3d(0,0,0)" },
           "50%": { transform: "translate3d(0,-10px,0)" },
@@ -70,6 +71,7 @@ const config: Config = {
         },
       },
       animation: {
+        spin3d: "spin3d 28s linear infinite",
         float: "float 7s ease-in-out infinite",
         "float-slow": "float 10s ease-in-out infinite",
         shimmer: "shimmer 2.4s linear infinite",

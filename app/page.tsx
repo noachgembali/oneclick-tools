@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import { HomeClient } from "@/components/home/HomeClient";
 import { buildFaqJsonLd } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
-import { categories, tools } from "@/lib/tools";
+import { categories, tools as allTools } from "@/lib/tools";
+import { hasDef } from "@/lib/tool-defs";
+
+const tools = allTools.filter((t) => hasDef(t.slug));
 
 export const metadata: Metadata = {
   title: { absolute: `${siteConfig.name}: Free Online Calculators, Converters & Developer Tools` },

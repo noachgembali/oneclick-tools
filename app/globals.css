@@ -7,34 +7,32 @@
 /* ------------------------------------------------------------------ */
 :root {
   color-scheme: light;
-  --bg: 242 245 252;        /* Frost */
+  --bg: 255 255 255;
   --surface: 255 255 255;
-  --raised: 232 237 250;
-  --line: 214 221 242;
-  --fg: 18 25 54;
-  --muted: 85 96 138;
-  --brand: 53 82 232;       /* Cobalt (light) */
+  --raised: 247 245 240;
+  --line: 230 225 214;
+  --fg: 20 18 15;
+  --muted: 107 101 90;
+  --brand: 11 93 75;        /* Emerald */
   --brand-fg: 255 255 255;
-  --saffron: 214 130 0;
-  --shadow: 40 55 120;
-
-  /* Reserved ad heights, shared so layout and AdSlot never disagree (zero CLS) */
+  --saffron: 184 137 59;    /* Antique gold */
+  --shadow: 60 50 30;
   --ad-header-h: 100px;
   --ad-sticky-h: 60px;
 }
 
 .dark {
   color-scheme: dark;
-  --bg: 16 22 43;           /* Ink */
-  --surface: 24 32 64;
-  --raised: 27 36 71;
-  --line: 42 53 99;
-  --fg: 233 236 250;
-  --muted: 152 162 204;
-  --brand: 91 124 255;      /* Cobalt (dark) */
-  --brand-fg: 10 14 32;
-  --saffron: 255 181 71;
-  --shadow: 3 6 20;
+  --bg: 14 13 11;
+  --surface: 23 21 18;
+  --raised: 31 28 23;
+  --line: 46 42 34;
+  --fg: 244 241 234;
+  --muted: 163 156 140;
+  --brand: 47 181 143;
+  --brand-fg: 10 20 16;
+  --saffron: 212 169 79;
+  --shadow: 0 0 0;
 }
 
 @media (min-width: 768px) {
@@ -168,3 +166,11 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+body {
+  background-image:
+    radial-gradient(900px 420px at 85% -5%, rgb(var(--saffron) / 0.12), transparent),
+    radial-gradient(800px 400px at 0% 0%, rgb(var(--brand) / 0.07), transparent);
+  background-attachment: fixed;
+}
+.gold-rule { height: 1px; background: linear-gradient(90deg, transparent, rgb(var(--saffron)), transparent); }

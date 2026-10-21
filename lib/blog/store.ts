@@ -38,3 +38,7 @@ export async function listPosts(): Promise<Post[]> {
     return [];
   }
 }
+
+export async function getPost(slug: string): Promise<Post | null> {
+  return (await listPosts()).find((p) => p.slug === slug) ?? null;
+}
